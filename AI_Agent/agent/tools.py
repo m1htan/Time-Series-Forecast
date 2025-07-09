@@ -1,43 +1,99 @@
-# ai_agent_stock/tools.py
-from typing import List
 import os
+from datetime import datetime
+
 import pandas as pd
-import yfinance as yf
-from alpha_vantage.timeseries import TimeSeries
 from langchain_core.tools import tool
-from .memory import DataFrameStore
+from langgraph.graph import StateGraph
+from langchain_core.runnables import RunnableLambda
+from AI_Agent.tools.crawl_data_agent import crawl_data
 
-# ---------- 1. Yahoo Finance ----------
 @tool
-def crawl_yfinance(tickers: List[str], period: str = "5y", interval: str = "1d") -> str:
+def crawl_data_tool(_input: dict = None):
     """
-    Lấy OHLCV từ Yahoo Finance và lưu vào DataFrameStore.
+    Tự động thu thập dữ liệu của các mã cổ phiếu từ yfinance, Alpha Vantage hoặc file csv fallback.
     """
-    for tk in tickers:
-        df = yf.download(tk, period=period, interval=interval, auto_adjust=True)
-        df.reset_index(inplace=True)
-        DataFrameStore.save(tk, df)
-    return f"Đã crawl {len(tickers)} mã bằng yfinance."
+    df = crawl_data()
+    return {"stock_data": df}
 
-# ---------- 2. Alpha Vantage ----------
 @tool
-def crawl_alphavantage(ticker: str, output_size: str = "full") -> str:
+def save_data_tool(stock_data: object) -> dict:
     """
-    Lấy dữ liệu daily Adjusted từ Alpha Vantage (dùng khi Yahoo bị rate‑limit).
+    Lưu dữ liệu từ stock_data thành các file CSV riêng biệt theo mã cổ phiếu vào thư mục 'data/'.
     """
-    ts = TimeSeries(key=os.getenv("ALPHAVANTAGE_API_KEY"), output_format="pandas")
-    data, _ = ts.get_daily_adjusted(ticker, outputsize=output_size)
-    data.sort_index(inplace=True)
-    data.reset_index(inplace=True)
-    DataFrameStore.save(ticker, data)
-    return f"Đã crawl {ticker} bằng Alpha Vantage."
+    import os
+    from datetime import datetime
 
-# ---------- 3. Fallback CSV ----------
+    df = stock_data
+    if df is None:
+        raise ValueError("Không tìm thấy dữ liệu 'stock_data'.")
+
+    base_dir = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/data"
+    os.makedirs(base_dir, exist_ok=True)
+    today = datetime.today().strftime("%Y-%m-%d")
+
+    if hasattr(df, "columns") and isinstance(df.columns, pd.MultiIndex):
+        for ticker in df.columns.levels[0]:
+            sub_df = df[ticker].copy()
+            file_path = f"/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/data/{ticker}_{today}.csv"
+            sub_df.to_csv(file_path)
+            print(f"Đã lưu dữ liệu {ticker} vào {file_path}")
+    else:
+        for ticker in ["AAPL", "MSFT", "GOOG"]:
+            if ticker in df:
+                sub_df = df[ticker].copy()
+                file_path = f"/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/data/{ticker}_{today}.csv"
+                sub_df.to_csv(file_path)
+                print(f"Đã lưu dữ liệu {ticker} vào {file_path}")
+            else:
+                print(f"Không tìm thấy dữ liệu cho {ticker}.")
+
+    return {"stock_data": df}
+
 @tool
-def load_csv(path: str, ticker: str) -> str:
+def fill_missing_dates_tool(stock_data: object) -> dict:
     """
-    Đọc file CSV cục bộ (fallback) và lưu vào DataFrameStore.
+    Tự động chèn các ngày bị thiếu vào chuỗi thời gian (theo lịch), và nội suy giá trị bị thiếu.
+    Áp dụng cho từng mã cổ phiếu trong stock_data.
     """
-    df = pd.read_csv(path, parse_dates=["Date"])
-    DataFrameStore.save(ticker, df)
-    return f"Đã nạp dữ liệu {ticker} từ file CSV."
+    if stock_data is None:
+        raise ValueError("Không có dữ liệu stock_data.")
+
+    if callable(stock_data):
+        stock_data = stock_data()
+
+    df = stock_data
+    result = {}
+
+    if isinstance(df.columns, pd.MultiIndex):
+        for ticker in df.columns.levels[0]:
+            df_ticker = df[ticker].copy()
+            df_ticker = df_ticker.reset_index().rename(columns={"Date": "record_date"})
+
+            # Đặt lại index
+            df_ticker = df_ticker.set_index('record_date').sort_index()
+
+            # Tạo khoảng thời gian liên tục theo ngày
+            full_range = pd.date_range(start=df_ticker.index.min(), end=df_ticker.index.max(), freq='D')
+            df_filled = df_ticker.reindex(full_range)
+            df_filled.index.name = 'record_date'
+
+            # Xử lý nội suy cho các cột giá
+            price_cols = ['Open', 'High', 'Low', 'Close']
+            for col in price_cols:
+                if col in df_filled.columns:
+                    df_filled[col] = (
+                        df_filled[col]
+                        .interpolate(method='linear')
+                        .bfill()
+                        .ffill()
+                    )
+
+            # Xử lý Volume bằng forward fill
+            if 'Volume' in df_filled.columns:
+                df_filled['Volume'] = df_filled['Volume'].ffill()
+
+            result[ticker] = df_filled
+    else:
+        raise ValueError("Dữ liệu đầu vào không đúng định dạng MultiIndex.")
+
+    return {"stock_data": result}

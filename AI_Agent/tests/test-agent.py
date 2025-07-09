@@ -1,6 +1,8 @@
 # test_tools.py
 import pandas as pd
-from memory import DataFrameStore
+from AI_Agent.agent.tools import crawl_yfinance
+from AI_Agent.memories.memory import DataFrameStore
+from AI_Agent.agent.main import build_agent
 
 def test_yfinance_single():
     DataFrameStore.clear()
@@ -11,9 +13,6 @@ def test_yfinance_single():
     assert {"Date", "Close"}.issubset(df.columns)
 
 # test_agent.py
-from agent import build_agent
-from memory import DataFrameStore
-
 def test_agent_workflow(monkeypatch):
     DataFrameStore.clear()
     agent = build_agent(verbose=False)
