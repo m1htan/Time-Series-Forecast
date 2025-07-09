@@ -7,7 +7,7 @@ from AI_Agent.tools.check_preprocessing import check_preprocessing_tool
 from AI_Agent.tools.fill_missing_data import fill_missing_dates_tool
 from AI_Agent.tools.main_crawl_data import crawl_data_tool
 from AI_Agent.tools.save_data_to_csv_daily import save_data_tool
-from AI_Agent.tools.checking_logs import log_workflow_step_tool
+from AI_Agent.logs.checking_logs import log_workflow_step_tool
 
 # 1. Định nghĩa State schema ------------------------------------------------------------------------------------
 class StockState(TypedDict):
