@@ -7,12 +7,11 @@ import matplotlib.pyplot as plt
 
 import seaborn as sns
 from statsmodels.tsa.stattools import adfuller, acf, pacf
-from datetime import datetime
 from langchain_core.tools import tool
 
 from AI_Agent.logs.checking_logs import log_workflow_step_tool
 
-EDA_OUTPUT_DIR = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/eda_output"
+EDA_OUTPUT_DIR = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/output/eda_output"
 os.makedirs(EDA_OUTPUT_DIR, exist_ok=True)
 
 @tool
@@ -79,10 +78,10 @@ def eda_tool(stock_data: object) -> dict:
                 from matplotlib import rcParams
                 rcParams.update({'axes.grid': True})
                 fig, axes = plt.subplots(1, 2, figsize=(14, 4))
-                axes[0].stem(acf(df["Close"].dropna(), nlags=30), use_line_collection=True)
+                axes[0].stem(acf(df["Close"].dropna(), nlags=30))
                 axes[0].set_title("ACF")
 
-                axes[1].stem(pacf(df["Close"].dropna(), nlags=30), use_line_collection=True)
+                axes[1].stem(pacf(df["Close"].dropna(), nlags=30))
                 axes[1].set_title("PACF")
 
                 plt.suptitle(f"{ticker} - ACF/PACF")
@@ -104,7 +103,11 @@ def eda_tool(stock_data: object) -> dict:
                 "step": "eda_tool",
                 "step_description": f"Lỗi khi xử lý EDA cho {ticker}",
                 "level": "ERROR",
-                "metadata": {"error": str(e)}
+                "metadata": {
+                             "error": str(e),
+                             "columns": df.columns.tolist(),
+                             "rows": len(df)
+                            }
             })
         else:
             log_workflow_step_tool.invoke({
