@@ -72,4 +72,7 @@ def time_series_analysis_core(stock_data: object) -> dict:
         df_clean.dropna().to_csv(f"/Users/minhtan/Documents/GitHub/Time_Series_Forecast/output/timeseries_analysis_output/{ticker}_features.csv")
         output[ticker] = ticker_result
 
-    return {"time_series_analysis_summary": output}
+    return {
+        "time_series_analysis_summary": output,
+        "preprocessed_data": stock_data
+    }

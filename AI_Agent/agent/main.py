@@ -10,12 +10,14 @@ from AI_Agent.tools.fill_missing_data import fill_missing_dates_tool
 from AI_Agent.tools.main_crawl_data import crawl_data_tool
 from AI_Agent.tools.save_data_to_csv_daily import save_data_tool
 from AI_Agent.logs.checking_logs import log_workflow_step_tool
+from AI_Agent.tools.splitting_dataset import walk_forward_split_tool
 from AI_Agent.tools.time_series_analysis import time_series_analysis_core
 
 # 1. Định nghĩa State schema ------------------------------------------------------------------------------------
 class StockState(TypedDict):
     stock_data: pd.DataFrame
     preprocessed_data: pd.DataFrame
+    preprocessed_data: dict
 
 # 2. Khởi tạo StateGraph có schema ------------------------------------------------------------------------------
 workflow = StateGraph(StockState)
@@ -42,6 +44,9 @@ workflow.add_node("log_after_eda", lambda state: log_workflow_step_tool.invoke("
 workflow.add_node("log_after_save", lambda state: log_workflow_step_tool.invoke("Đã lưu dữ liệu xong"))
 workflow.add_node("log_final", lambda state: log_workflow_step_tool.invoke("Workflow đã hoàn tất"))
 workflow.add_node("log_after_baseline", lambda state: log_workflow_step_tool.invoke("Đã tính baseline"))
+workflow.add_node("log_after_split", lambda state: log_workflow_step_tool.invoke("Đã chia dữ liệu theo walk-forward"))
+workflow.add_node("walk_forward_split_tool", walk_forward_split_tool)
+
 
 workflow.add_node("crawl_data", crawl_data_tool)
 workflow.add_node("fill_missing", fill_missing_dates_tool)
@@ -77,7 +82,10 @@ workflow.add_edge("log_after_eda", "time_series_analysis_core")
 # Sau time_series_analysis_core → tính baseline
 workflow.add_edge("time_series_analysis_core", "baseline_calculation")
 workflow.add_edge("baseline_calculation", "log_after_baseline")
-workflow.add_edge("log_after_baseline", "log_final")  # ← Gộp luôn vào final log
+
+workflow.add_edge("log_after_baseline", "walk_forward_split_tool")
+workflow.add_edge("walk_forward_split_tool", "log_after_split")
+workflow.add_edge("log_after_split", "log_final")  # ← Gộp luôn vào final log
 
 # Kết thúc tại log_final
 workflow.set_finish_point("log_final")
