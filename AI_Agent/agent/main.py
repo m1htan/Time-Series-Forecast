@@ -85,7 +85,7 @@ workflow.add_edge("baseline_calculation", "log_after_baseline")
 
 workflow.add_edge("log_after_baseline", "walk_forward_split_tool")
 workflow.add_edge("walk_forward_split_tool", "log_after_split")
-workflow.add_edge("log_after_split", "log_final")  # ← Gộp luôn vào final log
+workflow.add_edge("log_after_split", "log_final")
 
 # Kết thúc tại log_final
 workflow.set_finish_point("log_final")
