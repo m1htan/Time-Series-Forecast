@@ -31,3 +31,6 @@ coverage/
 *.swp
 
 *.env
+
+.gitattributes
+.gitignore
