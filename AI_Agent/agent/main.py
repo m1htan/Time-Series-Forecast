@@ -14,6 +14,8 @@ from AI_Agent.tools.save_data_to_csv_daily import save_data_tool
 from AI_Agent.logs.checking_logs import log_workflow_step_tool
 from AI_Agent.tools.splitting_dataset import walk_forward_split_tool
 from AI_Agent.tools.time_series_analysis import time_series_analysis_core
+# from AI_Agent.tools.tuning_models import tuning_model_tool
+
 
 # 1. Định nghĩa State schema ------------------------------------------------------------------------------------
 class StockState(TypedDict):
@@ -52,6 +54,7 @@ workflow.add_node("log_after_prophet", lambda state: log_workflow_step_tool.invo
 workflow.add_node("log_after_gru", lambda state: log_workflow_step_tool.invoke("Đã huấn luyện model GRU"))
 workflow.add_node("log_after_deeplinear", lambda state: log_workflow_step_tool.invoke("Đã huấn luyện model DeepLinear"))
 workflow.add_node("log_after_choose_model", lambda state: log_workflow_step_tool.invoke("Đã chọn model thành công"))
+workflow.add_node("log_after_tuning_model", lambda state: log_workflow_step_tool.invoke("Đã tuning model thành công"))
 
 
 workflow.add_node("crawl_data", crawl_data_tool)
@@ -64,6 +67,7 @@ workflow.add_node("time_series_analysis_core", time_series_analysis_core)
 workflow.add_node("baseline_calculation", calculate_baseline_tool)
 workflow.add_node("walk_forward_split_tool", walk_forward_split_tool)
 workflow.add_node("choose_model_tool", RunnableLambda(choose_model_tool))
+# workflow.add_node("tuning_model_tool", tuning_model_tool)
 
 workflow.add_node("prophet_model", RunnableLambda(run_prophet_or_skip))
 
@@ -76,15 +80,17 @@ workflow.set_entry_point("crawl_data")
 
 workflow.add_edge("crawl_data", "log_after_crawl")
 workflow.add_edge("log_after_crawl", "fill_missing")
+
 workflow.add_edge("fill_missing", "log_after_fill")
 workflow.add_edge("log_after_fill", "test_node")
+
 workflow.add_edge("test_node", "check_preprocessing_tool")
 workflow.add_edge("check_preprocessing_tool", "log_after_check")
 
 # Nhánh song song từ log_after_check
 workflow.add_edge("log_after_check", "save_data_node")
 workflow.add_edge("log_after_check", "eda_analysis")
-s
+
 # Sau khi save và eda, gộp lại
 workflow.add_edge("save_data_node", "log_after_save")
 workflow.add_edge("eda_analysis", "log_after_eda")
@@ -111,6 +117,9 @@ workflow.add_edge("deeplinear_model", "log_after_deeplinear")
 
 workflow.add_edge("log_after_deeplinear", "choose_model_tool")
 workflow.add_edge("choose_model_tool", "log_after_choose_model")
+
+# workflow.add_edge("log_after_choose_model", "tuning_model_tool")
+# workflow.add_edge("tuning_model_tool", "log_after_tuning_model")
 
 workflow.add_edge("log_after_choose_model", "log_final")
 
