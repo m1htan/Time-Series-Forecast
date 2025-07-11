@@ -11,7 +11,7 @@ from langchain_core.tools import tool
 
 from AI_Agent.logs.checking_logs import log_workflow_step_tool
 
-EDA_OUTPUT_DIR = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/output/eda_output"
+EDA_OUTPUT_DIR = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/eda_output"
 os.makedirs(EDA_OUTPUT_DIR, exist_ok=True)
 
 @tool

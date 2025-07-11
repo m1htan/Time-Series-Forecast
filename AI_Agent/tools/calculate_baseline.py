@@ -4,7 +4,7 @@ import os
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import numpy as np
 
-BASELINE_OUTPUT_DIR = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/output/baseline_output"
+BASELINE_OUTPUT_DIR = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/baseline_output"
 os.makedirs(BASELINE_OUTPUT_DIR, exist_ok=True)
 
 @tool

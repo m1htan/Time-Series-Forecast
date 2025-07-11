@@ -16,7 +16,7 @@ def walk_forward_split_tool(preprocessed_data: object, train_window: int = 200, 
         raise ValueError("Dữ liệu phải là dict[ticker: DataFrame]")
 
     result = {}
-    output_dir = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/output/splits"
+    output_dir = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/splits"
     os.makedirs(output_dir, exist_ok=True)
 
     for ticker, df in preprocessed_data.items():
