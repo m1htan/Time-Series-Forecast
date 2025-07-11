@@ -1,0 +1,4 @@
+,MAE,RMSE,MAPE,ticker,result_path
+AAPL,11.761617770712808,13.71758718122191,7.812550764798965,AAPL,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/gru_results/AAPL_gru_results.csv
+GOOG,10.034678221723912,11.847657967763944,8.048658542774342,GOOG,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/gru_results/GOOG_gru_results.csv
+MSFT,19.215024382715658,22.70332447969621,6.573335187000879,MSFT,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/gru_results/MSFT_gru_results.csv

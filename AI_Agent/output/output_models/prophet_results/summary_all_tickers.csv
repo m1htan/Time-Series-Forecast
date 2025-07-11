@@ -1,4 +1,4 @@
 ,MAE,RMSE,MAPE,ticker,result_path
-AAPL,6.099422339725242,6.40296584003167,3.748938189688975,AAPL,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results/AAPL_prophet_results.csv
-GOOG,4.5995017192315295,4.869432001451254,3.6388993950392874,GOOG,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results/GOOG_prophet_results.csv
-MSFT,9.990519007687872,10.489765212853682,3.2303372149998806,MSFT,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results/MSFT_prophet_results.csv
+AAPL,6.10902758944444,6.402578185016157,3.713770031061062,AAPL,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results/AAPL_prophet_results.csv
+GOOG,4.687963451769065,4.954234347688413,3.689361324693149,GOOG,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results/GOOG_prophet_results.csv
+MSFT,10.159250807215228,10.644815858937884,3.262332648776856,MSFT,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results/MSFT_prophet_results.csv

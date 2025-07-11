@@ -4,7 +4,7 @@ import pandas as pd
 from AI_Agent.logs.checking_logs import log_workflow_step_tool
 
 @tool
-def walk_forward_split_tool(preprocessed_data: object, train_window: int = 200, forecast_horizon: int = 5) -> dict:
+def walk_forward_split_tool(preprocessed_data: object, train_window: int = 200, forecast_horizon: int = 15) -> dict:
     """
     Áp dụng walk-forward validation trên mỗi mã cổ phiếu.
     Lưu toàn bộ train/test splits thành 1 file CSV duy nhất cho mỗi mã.

@@ -11,6 +11,8 @@ def time_series_analysis_core(stock_data: object) -> dict:
     Phân tích định lượng chuỗi Close: autocorrelation, stationarity, decomposition, feature creation.
     """
     output = {}
+    preprocessed_dfs = {}
+
     for ticker, df in stock_data.items():
         ticker_result = {}
 
@@ -69,10 +71,12 @@ def time_series_analysis_core(stock_data: object) -> dict:
         except Exception as e:
             ticker_result["tech_indicator_error"] = str(e)
 
+        preprocessed_dfs[ticker] = df_clean
+
         df_clean.dropna().to_csv(f"/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/timeseries_analysis_output/{ticker}_features.csv")
         output[ticker] = ticker_result
 
     return {
         "time_series_analysis_summary": output,
-        "preprocessed_data": stock_data
+        "preprocessed_data": preprocessed_dfs
     }

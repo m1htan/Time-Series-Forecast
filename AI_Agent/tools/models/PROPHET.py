@@ -9,7 +9,6 @@ import pandas as pd
 
 class ProphetModelInput(BaseModel):
     walk_forward_splits: Dict[str, str]  # ticker -> path to CSV
-
     model_config = {
         "arbitrary_types_allowed": True
     }
@@ -40,16 +39,26 @@ def prophet_model_tool(input: ProphetModelInput) -> dict:
             print(preview_df)
 
             # Bắt đầu đọc full dữ liệu
-            df = pd.read_csv(file_path, parse_dates=["record_date"])
+            df = pd.read_csv(file_path, parse_dates=["Date"])
         except Exception as e:
             print(f"[ERROR] Lỗi khi đọc file CSV {file_path}: {e}")
             continue
 
-        df = pd.read_csv(file_path, parse_dates=["record_date"])
-        df.rename(columns={"record_date": "ds", "Close": "y"}, inplace=True)
+        df = pd.read_csv(file_path, parse_dates=["Date"])
+        df.rename(columns={"Date": "ds", "Close": "y"}, inplace=True)
         df = df[["ds", "y", "split_id", "type"]].dropna().sort_values("ds")
 
         all_metrics = []
+
+        # Nếu file kết quả đã tồn tại -> skip huấn luyện, chỉ load lại kết quả
+        if os.path.exists(file_path):
+            print(f"[INFO] Đã có kết quả GRU của {ticker}, load từ file: {file_path}")
+            df_result = pd.read_csv(file_path)
+            avg_metrics = df_result[["MAE", "RMSE", "MAPE"]].mean(numeric_only=True).to_dict()
+            avg_metrics["ticker"] = ticker
+            avg_metrics["file_path"] = file_path
+            summary[ticker] = avg_metrics
+            continue  # skip huấn luyện
 
         for split_id in df["split_id"].unique():
             split_df = df[df["split_id"] == split_id]
