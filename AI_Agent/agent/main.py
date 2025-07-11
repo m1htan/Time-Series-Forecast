@@ -8,6 +8,7 @@ from AI_Agent.tools.check_preprocessing import check_preprocessing_tool
 from AI_Agent.tools.eda import eda_tool
 from AI_Agent.tools.fill_missing_data import fill_missing_dates_tool
 from AI_Agent.tools.main_crawl_data import crawl_data_tool
+from AI_Agent.tools.models.PROPHET import prophet_model_tool
 from AI_Agent.tools.save_data_to_csv_daily import save_data_tool
 from AI_Agent.logs.checking_logs import log_workflow_step_tool
 from AI_Agent.tools.splitting_dataset import walk_forward_split_tool
@@ -18,6 +19,7 @@ class StockState(TypedDict):
     stock_data: pd.DataFrame
     preprocessed_data: pd.DataFrame
     preprocessed_data: dict
+    walk_forward_splits: dict
 
 # 2. Khởi tạo StateGraph có schema ------------------------------------------------------------------------------
 workflow = StateGraph(StockState)
@@ -45,7 +47,8 @@ workflow.add_node("log_after_save", lambda state: log_workflow_step_tool.invoke(
 workflow.add_node("log_final", lambda state: log_workflow_step_tool.invoke("Workflow đã hoàn tất"))
 workflow.add_node("log_after_baseline", lambda state: log_workflow_step_tool.invoke("Đã tính baseline"))
 workflow.add_node("log_after_split", lambda state: log_workflow_step_tool.invoke("Đã chia dữ liệu theo walk-forward"))
-workflow.add_node("walk_forward_split_tool", walk_forward_split_tool)
+workflow.add_node("log_after_prophet", lambda state: log_workflow_step_tool.invoke("Đã huấn luyện model Prophet"))
+
 
 
 workflow.add_node("crawl_data", crawl_data_tool)
@@ -56,6 +59,19 @@ workflow.add_node("save_data_node", save_data_tool)
 workflow.add_node("eda_analysis", eda_tool)
 workflow.add_node("time_series_analysis_core", time_series_analysis_core)
 workflow.add_node("baseline_calculation", calculate_baseline_tool)
+workflow.add_node("walk_forward_split_tool", walk_forward_split_tool)
+workflow.add_node(
+    "prophet_model",
+    RunnableLambda(lambda state: prophet_model_tool.invoke({
+        "input": {
+            "walk_forward_splits": {
+                ticker: info["output_path"]
+                for ticker, info in state["walk_forward_splits"].items()
+            }
+        }
+    }))
+)
+
 
 # 5. Kết nối các bước -------------------------------------------------------------------------------------------
 workflow.set_entry_point("crawl_data")
@@ -85,10 +101,16 @@ workflow.add_edge("baseline_calculation", "log_after_baseline")
 
 workflow.add_edge("log_after_baseline", "walk_forward_split_tool")
 workflow.add_edge("walk_forward_split_tool", "log_after_split")
-workflow.add_edge("log_after_split", "log_final")
+
+workflow.add_edge("log_after_split", "prophet_model")
+workflow.add_edge("prophet_model", "log_after_prophet")
+
+workflow.add_edge("log_after_prophet", "log_final")
 
 # Kết thúc tại log_final
 workflow.set_finish_point("log_final")
+
+
 
 # 6. Compile graph ----------------------------------------------------------------------------------------------
 graph = workflow.compile()

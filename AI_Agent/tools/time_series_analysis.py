@@ -69,7 +69,7 @@ def time_series_analysis_core(stock_data: object) -> dict:
         except Exception as e:
             ticker_result["tech_indicator_error"] = str(e)
 
-        df_clean.dropna().to_csv(f"/Users/minhtan/Documents/GitHub/Time_Series_Forecast/output/timeseries_analysis_output/{ticker}_features.csv")
+        df_clean.dropna().to_csv(f"/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/timeseries_analysis_output/{ticker}_features.csv")
         output[ticker] = ticker_result
 
     return {

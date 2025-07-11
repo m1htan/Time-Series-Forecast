@@ -1,0 +1,4 @@
+,MAE,RMSE,MAPE,ticker,result_path
+AAPL,6.099422339725242,6.40296584003167,3.748938189688975,AAPL,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results/AAPL_prophet_results.csv
+GOOG,4.5995017192315295,4.869432001451254,3.6388993950392874,GOOG,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results/GOOG_prophet_results.csv
+MSFT,9.990519007687872,10.489765212853682,3.2303372149998806,MSFT,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results/MSFT_prophet_results.csv
