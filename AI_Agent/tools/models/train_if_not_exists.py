@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from AI_Agent.tools.models.PROPHET import prophet_model_tool
 from AI_Agent.tools.models.GRU import gru_model_tool
+from AI_Agent.tools.models.DEEPLINEAR import deeplinear_model_tool
 
 def run_prophet_or_skip(state):
     output_dir = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/prophet_results"
@@ -53,3 +54,27 @@ def run_gru_or_skip(state):
 
     return {**state, "gru_summary": summary}
 
+def run_deeplinear_or_skip(state):
+    output_dir = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/deeplinear_results"
+    walk_splits = state["walk_forward_splits"]
+
+    summary = {}
+    for ticker, info in walk_splits.items():
+        result_path = os.path.join(output_dir, f"{ticker}_deeplinear_results.csv")
+        if os.path.exists(result_path):
+            print(f"[INFO] Đã có kết quả DeepLinear cho {ticker}, đọc lại từ file.")
+            df_result = pd.read_csv(result_path)
+            avg_metrics = df_result[["MAE", "RMSE", "MAPE"]].mean(numeric_only=True).to_dict()
+            avg_metrics["ticker"] = ticker
+            avg_metrics["result_path"] = result_path
+            summary[ticker] = avg_metrics
+        else:
+            print(f"[INFO] Chưa có kết quả DeepLinear cho {ticker}, sẽ huấn luyện.")
+            result = deeplinear_model_tool.invoke({
+                "input": {
+                    "walk_forward_splits": {ticker: info["output_path"]}
+                }
+            })
+            summary[ticker] = result["summary"][ticker]
+
+    return {**state, "gru_summary": summary}

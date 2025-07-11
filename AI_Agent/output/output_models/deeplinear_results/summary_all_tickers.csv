@@ -1,0 +1,4 @@
+,MAE,RMSE,MAPE,ticker,result_path
+AAPL,10.989861247109191,13.035449343239748,7.236959918023934,AAPL,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/deeplinear_results/AAPL_deeplinear_results.csv
+GOOG,9.2287425730501,11.234732380120207,7.370013459931871,GOOG,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/deeplinear_results/GOOG_deeplinear_results.csv
+MSFT,18.013509861775383,21.589166837545886,6.168413821910602,MSFT,/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/deeplinear_results/MSFT_deeplinear_results.csv

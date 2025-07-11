@@ -5,7 +5,7 @@ def generate_summary(results_dir, output_path="summary_all_tickers.csv"):
     summary = {}
 
     for file in os.listdir(results_dir):
-        if file.endswith("_gru_results.csv"):
+        if file.endswith("_deeplinear_results.csv"):
             ticker = file.split("_")[0]
             file_path = os.path.join(results_dir, file)
 
@@ -43,5 +43,5 @@ def generate_summary(results_dir, output_path="summary_all_tickers.csv"):
 
 # Ví dụ cách chạy script
 if __name__ == "__main__":
-    results_dir = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/gru_results"
+    results_dir = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/output_models/deeplinear_results"
     generate_summary(results_dir)
