@@ -16,13 +16,13 @@ from AI_Agent.tools.splitting_dataset import walk_forward_split_tool
 from AI_Agent.tools.time_series_analysis import time_series_analysis_core
 # from AI_Agent.tools.tuning_models import tuning_model_tool
 
-
 # 1. Định nghĩa State schema ------------------------------------------------------------------------------------
 class StockState(TypedDict):
     stock_data: pd.DataFrame
     preprocessed_data: pd.DataFrame
     preprocessed_data: dict
     walk_forward_splits: dict
+    initial_capital: float
 
 # 2. Khởi tạo StateGraph có schema ------------------------------------------------------------------------------
 workflow = StateGraph(StockState)
@@ -54,8 +54,7 @@ workflow.add_node("log_after_prophet", lambda state: log_workflow_step_tool.invo
 workflow.add_node("log_after_gru", lambda state: log_workflow_step_tool.invoke("Đã huấn luyện model GRU"))
 workflow.add_node("log_after_deeplinear", lambda state: log_workflow_step_tool.invoke("Đã huấn luyện model DeepLinear"))
 workflow.add_node("log_after_choose_model", lambda state: log_workflow_step_tool.invoke("Đã chọn model thành công"))
-workflow.add_node("log_after_tuning_model", lambda state: log_workflow_step_tool.invoke("Đã tuning model thành công"))
-
+# workflow.add_node("log_after_tuning_model", lambda state: log_workflow_step_tool.invoke("Đã tuning model thành công"))
 
 workflow.add_node("crawl_data", crawl_data_tool)
 workflow.add_node("fill_missing", fill_missing_dates_tool)
@@ -131,4 +130,11 @@ graph = workflow.compile()
 
 # 7. Chạy graph -------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
-    result = graph.invoke({})
+    result = graph.invoke({
+        "initial_capital": 100000.0
+})
+
+    # Gọi investment_decision_agent sau khi LangGraph chính đã xong
+    from AI_Agent.tools.capital_management import investment_decision_agent
+    investment_result = investment_decision_agent({"initial_capital": 100000.0})
+    print("Chiến lược đầu tư:", investment_result)
