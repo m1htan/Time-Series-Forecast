@@ -1,0 +1,4 @@
+adf_pvalue,seasonality_strength,autocorr_lag1,chosen_model
+0.1382,0.0,1.0,GRU
+0.5234,0.0,1.0,GRU
+0.8287,0.0,1.0,GRU

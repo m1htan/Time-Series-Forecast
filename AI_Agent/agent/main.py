@@ -5,6 +5,7 @@ from langchain_core.runnables import RunnableLambda
 
 from AI_Agent.tools.calculate_baseline import calculate_baseline_tool
 from AI_Agent.tools.check_preprocessing import check_preprocessing_tool
+from AI_Agent.tools.choose_model import choose_model_tool
 from AI_Agent.tools.eda import eda_tool
 from AI_Agent.tools.fill_missing_data import fill_missing_dates_tool
 from AI_Agent.tools.main_crawl_data import crawl_data_tool
@@ -50,6 +51,8 @@ workflow.add_node("log_after_split", lambda state: log_workflow_step_tool.invoke
 workflow.add_node("log_after_prophet", lambda state: log_workflow_step_tool.invoke("Đã huấn luyện model Prophet"))
 workflow.add_node("log_after_gru", lambda state: log_workflow_step_tool.invoke("Đã huấn luyện model GRU"))
 workflow.add_node("log_after_deeplinear", lambda state: log_workflow_step_tool.invoke("Đã huấn luyện model DeepLinear"))
+workflow.add_node("log_after_choose_model", lambda state: log_workflow_step_tool.invoke("Đã chọn model thành công"))
+
 
 workflow.add_node("crawl_data", crawl_data_tool)
 workflow.add_node("fill_missing", fill_missing_dates_tool)
@@ -60,6 +63,7 @@ workflow.add_node("eda_analysis", eda_tool)
 workflow.add_node("time_series_analysis_core", time_series_analysis_core)
 workflow.add_node("baseline_calculation", calculate_baseline_tool)
 workflow.add_node("walk_forward_split_tool", walk_forward_split_tool)
+workflow.add_node("choose_model_tool", RunnableLambda(choose_model_tool))
 
 workflow.add_node("prophet_model", RunnableLambda(run_prophet_or_skip))
 
@@ -80,7 +84,7 @@ workflow.add_edge("check_preprocessing_tool", "log_after_check")
 # Nhánh song song từ log_after_check
 workflow.add_edge("log_after_check", "save_data_node")
 workflow.add_edge("log_after_check", "eda_analysis")
-
+s
 # Sau khi save và eda, gộp lại
 workflow.add_edge("save_data_node", "log_after_save")
 workflow.add_edge("eda_analysis", "log_after_eda")
@@ -105,7 +109,10 @@ workflow.add_edge("gru_model", "log_after_gru")
 workflow.add_edge("log_after_gru", "deeplinear_model")
 workflow.add_edge("deeplinear_model", "log_after_deeplinear")
 
-workflow.add_edge("log_after_deeplinear", "log_final")
+workflow.add_edge("log_after_deeplinear", "choose_model_tool")
+workflow.add_edge("choose_model_tool", "log_after_choose_model")
+
+workflow.add_edge("log_after_choose_model", "log_final")
 
 # Kết thúc tại log_final
 workflow.set_finish_point("log_final")
