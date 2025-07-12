@@ -18,6 +18,15 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # 1. Định nghĩa State
 class InvestmentState(BaseModel):
+    """
+    Đại diện cho trạng thái của đồ thị tư vấn đầu tư.
+    Attributes:
+        initial_capital: Số vốn ban đầu do người dùng cung cấp.
+        forecast_data: Dữ liệu dự báo giá của các cổ phiếu.
+        analysis: Kết quả phân tích cơ hội từ analyst_agent.
+        strategy: Chiến lược phân bổ vốn cuối cùng từ strategy_agent.
+        messages: Lịch sử các thông điệp trao đổi trong quá trình.
+    """
     initial_capital: float
     forecast_data: dict
     analysis: str = ""
@@ -30,12 +39,22 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.7, google_api
 # 3. Agent phân tích
 def analyst_agent(state: InvestmentState):
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """Bạn là một nhà phân tích tài chính định lượng chuyên nghiệp...
-(Hướng dẫn như đoạn bạn gửi ban đầu)"""),
-        ("human", """Dưới đây là dữ liệu dự báo giá và thông tin tôi có:
+        ("system",
+         """Bạn là một nhà phân tích tài chính định lượng chuyên nghiệp.
+Nhiệm vụ của bạn là phân tích dữ liệu dự báo giá cổ phiếu trong 5 ngày tới.
+Với mỗi cổ phiếu, hãy thực hiện các việc sau:
+1.  Tìm ra ngày mua vào có giá thấp nhất và ngày bán ra có giá cao nhất (ngày bán phải sau ngày mua).
+2.  Tính toán lợi nhuận tiềm năng trên mỗi cổ phiếu nếu thực hiện giao dịch này.
+3.  Tính toán Tỷ suất sinh lời (ROI) cho mỗi giao dịch (Lợi nhuận / Giá mua).
+4.  Đưa ra nhận xét ngắn gọn về mức độ hấp dẫn của mỗi cổ phiếu.
+5.  Trình bày kết quả một cách rõ ràng và có cấu trúc. Nếu một cổ phiếu không có cơ hội sinh lời (giá chỉ đi xuống), hãy nêu rõ điều đó.
+"""),
+        ("human",
+         """Dưới đây là dữ liệu dự báo giá và thông tin tôi có:
 - Dữ liệu dự báo giá 5 ngày tới: {forecast_data}
 Vui lòng thực hiện phân tích của bạn.""")
     ])
+
     chain = prompt | llm
     forecast_data = state.forecast_data
     response = chain.invoke({"forecast_data": str(forecast_data)})
@@ -45,15 +64,31 @@ Vui lòng thực hiện phân tích của bạn.""")
 def strategy_agent(state: InvestmentState):
     time.sleep(60)
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """Bạn là một nhà quản trị vốn tài chính dày dạn kinh nghiệm...
-(Hướng dẫn như đoạn bạn gửi ban đầu)"""),
-        ("human", """Đây là thông tin tôi có:
+        ("system",
+         """Bạn là một nhà quản trị vốn tài chính dày dạn kinh nghiệm.
+Bạn vừa nhận được một bản phân tích về cơ hội đầu tư từ đội ngũ của mình.
+Nhiệm vụ của bạn là dựa vào bản phân tích này và số vốn được cung cấp để đưa ra một chiến lược phân bổ vốn chi tiết và tối ưu.
+Yêu cầu:
+1.  Đọc kỹ bản phân tích để hiểu các cơ hội có ROI cao nhất.
+2.  Dựa trên số vốn ban đầu, quyết định phân bổ bao nhiêu tiền vào mỗi cơ hội hấp dẫn. Cân nhắc cả việc đa dạng hóa danh mục.
+3.  Đưa ra kế hoạch hành động cụ thể:
+    - Mua cổ phiếu nào?
+    - Mua vào ngày nào?
+    - Mua bao nhiêu cổ phiếu (tính toán dựa trên giá mua và số vốn phân bổ)?
+    - Tổng số tiền đầu tư là bao nhiêu?
+    - Số vốn còn lại là bao nhiêu?
+4.  Tổng hợp lại lợi nhuận dự kiến và giá trị danh mục cuối cùng sau 5 ngày nếu chiến lược thành công.
+5.  Trình bày chiến lược một cách thuyết phục, chuyên nghiệp và dễ hiểu.
+"""),
+        ("human",
+         """Đây là thông tin tôi có:
 - Số vốn ban đầu: ${initial_capital:,.2f}
 - Bản phân tích cơ hội đầu tư:
 {analysis}
 
 Hãy đưa ra chiến lược phân bổ vốn của bạn.""")
     ])
+
     chain = prompt | llm
     response = chain.invoke({
         "initial_capital": state.initial_capital,
