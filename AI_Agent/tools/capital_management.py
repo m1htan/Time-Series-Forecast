@@ -131,6 +131,15 @@ def investment_decision_agent(state: Dict) -> Dict:
                 continue
             forecast_data[ticker] = {f"Day {i+1}": round(v, 2) for i, v in enumerate(forecast_values)}
 
+    output_path = "/Users/minhtan/Documents/GitHub/Time_Series_Forecast/AI_Agent/output/investment_results/investment_decision.csv"
+    if os.path.exists(output_path):
+        print("[INFO] Đã có file investment_decision.csv, bỏ qua bước phân tích.")
+        df_result = pd.read_csv(output_path)
+        return {
+            "analysis": df_result.loc[0, "analysis"],
+            "strategy": df_result.loc[0, "strategy"]
+        }
+
     # Build workflow
     graph = build_investment_graph()
     inputs = {

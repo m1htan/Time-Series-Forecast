@@ -1429,3 +1429,93 @@
 [2025-07-12 02:49:29] Đã huấn luyện model DeepLinear
 [2025-07-12 02:49:32] Đã chọn model thành công
 [2025-07-12 02:49:32] Workflow đã hoàn tất
+[2025-07-12 11:24:42] Đã crawl dữ liệu
+[2025-07-12 11:24:42] Đã fill dữ liệu bị thiếu
+[2025-07-12 11:24:42] Đã kiểm tra preprocessing
+[2025-07-12 11:24:43] Đã xuất các biểu đồ và thống kê EDA cho AAPL
+[2025-07-12 11:24:44] Đã xuất các biểu đồ và thống kê EDA cho GOOG
+[2025-07-12 11:24:45] Đã xuất các biểu đồ và thống kê EDA cho MSFT
+[2025-07-12 11:24:45] Đã eda dữ liệu
+[2025-07-12 11:24:45] Đã lưu dữ liệu xong
+[2025-07-12 11:24:45] Đã tính baseline
+[2025-07-12 11:24:45] Đã chia và lưu splits cho AAPL
+[2025-07-12 11:24:46] Đã chia và lưu splits cho GOOG
+[2025-07-12 11:24:46] Đã chia và lưu splits cho MSFT
+[2025-07-12 11:24:46] Đã chia dữ liệu theo walk-forward
+[2025-07-12 11:24:46] Đã huấn luyện model Prophet
+[2025-07-12 11:24:46] Đã huấn luyện model GRU
+[2025-07-12 11:24:46] Đã huấn luyện model DeepLinear
+[2025-07-12 11:24:49] Đã chọn model thành công
+[2025-07-12 11:24:49] Workflow đã hoàn tất
+[2025-07-12 11:31:11] Đã crawl dữ liệu
+[2025-07-12 11:31:12] Đã fill dữ liệu bị thiếu
+[2025-07-12 11:31:12] Đã kiểm tra preprocessing
+[2025-07-12 11:31:13] Đã xuất các biểu đồ và thống kê EDA cho AAPL
+[2025-07-12 11:31:13] Đã xuất các biểu đồ và thống kê EDA cho GOOG
+[2025-07-12 11:31:14] Đã xuất các biểu đồ và thống kê EDA cho MSFT
+[2025-07-12 11:31:14] Đã eda dữ liệu
+[2025-07-12 11:31:14] Đã lưu dữ liệu xong
+[2025-07-12 11:31:15] Đã tính baseline
+[2025-07-12 11:31:15] Đã chia và lưu splits cho AAPL
+[2025-07-12 11:31:15] Đã chia và lưu splits cho GOOG
+[2025-07-12 11:31:16] Đã chia và lưu splits cho MSFT
+[2025-07-12 11:31:16] Đã chia dữ liệu theo walk-forward
+[2025-07-12 11:31:16] Đã huấn luyện model Prophet
+[2025-07-12 11:31:16] Đã huấn luyện model GRU
+[2025-07-12 11:31:16] Đã huấn luyện model DeepLinear
+[2025-07-12 11:31:20] Đã chọn model thành công
+[2025-07-12 11:31:20] Workflow đã hoàn tất
+[2025-07-12 11:44:24] Đã crawl dữ liệu
+[2025-07-12 11:44:24] Đã fill dữ liệu bị thiếu
+[2025-07-12 11:44:24] Đã kiểm tra preprocessing
+[2025-07-12 11:44:25] Đã xuất các biểu đồ và thống kê EDA cho AAPL
+[2025-07-12 11:44:27] Đã xuất các biểu đồ và thống kê EDA cho GOOG
+[2025-07-12 11:44:28] Đã xuất các biểu đồ và thống kê EDA cho MSFT
+[2025-07-12 11:44:28] Đã eda dữ liệu
+[2025-07-12 11:44:28] Đã lưu dữ liệu xong
+[2025-07-12 11:44:28] Đã tính baseline
+[2025-07-12 11:44:29] Đã chia và lưu splits cho AAPL
+[2025-07-12 11:44:29] Đã chia và lưu splits cho GOOG
+[2025-07-12 11:44:29] Đã chia và lưu splits cho MSFT
+[2025-07-12 11:44:29] Đã chia dữ liệu theo walk-forward
+[2025-07-12 11:44:29] Đã huấn luyện model Prophet
+[2025-07-12 11:44:29] Đã huấn luyện model GRU
+[2025-07-12 11:44:29] Đã huấn luyện model DeepLinear
+[2025-07-12 11:44:33] Đã chọn model thành công
+[2025-07-12 11:44:33] Workflow đã hoàn tất
+[2025-07-12 11:54:16] Đã crawl dữ liệu
+[2025-07-12 11:54:16] Đã fill dữ liệu bị thiếu
+[2025-07-12 11:54:16] Đã kiểm tra preprocessing
+[2025-07-12 11:54:17] Đã xuất các biểu đồ và thống kê EDA cho AAPL
+[2025-07-12 11:54:17] Đã xuất các biểu đồ và thống kê EDA cho GOOG
+[2025-07-12 11:54:18] Đã xuất các biểu đồ và thống kê EDA cho MSFT
+[2025-07-12 11:54:18] Đã eda dữ liệu
+[2025-07-12 11:54:18] Đã lưu dữ liệu xong
+[2025-07-12 11:54:19] Đã tính baseline
+[2025-07-12 11:54:19] Đã chia và lưu splits cho AAPL
+[2025-07-12 11:54:19] Đã chia và lưu splits cho GOOG
+[2025-07-12 11:54:20] Đã chia và lưu splits cho MSFT
+[2025-07-12 11:54:20] Đã chia dữ liệu theo walk-forward
+[2025-07-12 11:54:20] Đã huấn luyện model Prophet
+[2025-07-12 11:54:20] Đã huấn luyện model GRU
+[2025-07-12 11:54:20] Đã huấn luyện model DeepLinear
+[2025-07-12 11:54:23] Đã chọn model thành công
+[2025-07-12 11:54:23] Workflow đã hoàn tất
+[2025-07-12 12:11:09] Đã crawl dữ liệu
+[2025-07-12 12:11:09] Đã fill dữ liệu bị thiếu
+[2025-07-12 12:11:09] Đã kiểm tra preprocessing
+[2025-07-12 12:11:10] Đã xuất các biểu đồ và thống kê EDA cho AAPL
+[2025-07-12 12:11:11] Đã xuất các biểu đồ và thống kê EDA cho GOOG
+[2025-07-12 12:11:12] Đã xuất các biểu đồ và thống kê EDA cho MSFT
+[2025-07-12 12:11:12] Đã eda dữ liệu
+[2025-07-12 12:11:12] Đã lưu dữ liệu xong
+[2025-07-12 12:11:13] Đã tính baseline
+[2025-07-12 12:11:13] Đã chia và lưu splits cho AAPL
+[2025-07-12 12:11:13] Đã chia và lưu splits cho GOOG
+[2025-07-12 12:11:14] Đã chia và lưu splits cho MSFT
+[2025-07-12 12:11:14] Đã chia dữ liệu theo walk-forward
+[2025-07-12 12:11:14] Đã huấn luyện model Prophet
+[2025-07-12 12:11:14] Đã huấn luyện model GRU
+[2025-07-12 12:11:14] Đã huấn luyện model DeepLinear
+[2025-07-12 12:11:17] Đã chọn model thành công
+[2025-07-12 12:11:17] Workflow đã hoàn tất

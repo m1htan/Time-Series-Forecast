@@ -1,3 +1,4 @@
+import os
 from typing import TypedDict
 import pandas as pd
 from langgraph.graph import StateGraph
@@ -136,5 +137,13 @@ if __name__ == "__main__":
 
     # Gọi investment_decision_agent sau khi LangGraph chính đã xong
     from AI_Agent.tools.capital_management import investment_decision_agent
+    from AI_Agent.tools.send_mail import send_report_tool, RECIPIENT_EMAIL
+
     investment_result = investment_decision_agent({"initial_capital": 100000.0})
     print("Chiến lược đầu tư:", investment_result)
+
+    print("[INFO] Đang gửi email báo cáo...")
+    send_result = send_report_tool.invoke({
+        "recipient_email": RECIPIENT_EMAIL
+    })
+    print("[RESULT]", send_result)
